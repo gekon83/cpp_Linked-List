@@ -29,6 +29,21 @@ void append(Node *node, int data) {
 	node->next = last;
 }
 
+// insert a node after a given node
+void insertAfter(Node *node, Node *ref, int data) {
+	cout << "inserting after data=" << ref->data << endl;
+
+	while((node != ref) && (node->next != NULL)) {
+		node = node->next;
+	}
+	cout << "data: " << node->data << endl;
+
+	Node *temp = new Node();
+	temp->data = data;
+	temp->next = node->next;
+	node->next = temp;
+}
+
 // iterate through list
 void printList(Node *node) {
 	cout << "--- printList ---" << endl;
@@ -61,6 +76,10 @@ int main() {
 
 	append(head,22);
 	push(&head,99);
+	printList(head);
+
+	insertAfter(head,(head->next)->next,51);
+	insertAfter(head,head,15);
 	printList(head);
 
 	return 0;
