@@ -36,7 +36,6 @@ void insertAfter(Node *node, Node *ref, int data) {
 	while((node != ref) && (node->next != NULL)) {
 		node = node->next;
 	}
-	cout << "data: " << node->data << endl;
 
 	Node *temp = new Node();
 	temp->data = data;
@@ -44,7 +43,21 @@ void insertAfter(Node *node, Node *ref, int data) {
 	node->next = temp;
 }
 
-// iterate through list
+// insert a node before a given node
+void insertBefore(Node *node, Node *ref, int data) {
+	cout << "inserting before data=" << ref->data << endl;
+
+	while((node->next != ref) && (node->next != NULL)) {
+		node = node->next;
+	}
+
+	Node *temp = new Node();
+	temp->data = data;
+	temp->next = node->next;
+	node->next = temp;
+}
+
+// iterate through list and print
 void printList(Node *node) {
 	cout << "--- printList ---" << endl;
 
@@ -62,6 +75,49 @@ void push(Node **head, int data) {
 	*head = temp;
 }
 
+int countNodes(Node *node, int reset) {
+	static int count = 0;
+	if (!reset)
+		count = 0;
+
+	if (node != NULL) {
+		count++;
+		countNodes(node->next, 1);
+	}
+	return count;
+}
+
+int sumNodes(Node *node, int reset) {
+	static float sum = 0.0;
+	if (!reset)
+		sum = 0.0;
+
+	if (node != NULL) {
+		sum += node->data;
+		//cout << "sum: " << sum << endl;
+		sumNodes(node->next, 1);
+	}
+	return sum;
+}
+
+// returns mean value of all nodes
+int meanNodes(Node *node, int reset) {
+	static int count = 0;
+	static float sum = 0.0;
+	if (!reset) {
+		count = 0;
+		sum = 0.0;
+	}
+
+	if (node != NULL) {
+		count++;
+		sum += node->data;
+		meanNodes(node->next, 1);
+	}
+
+	if (count)	return sum/count;
+	else		return 0;
+}
 //==============================================
 int main() {
 	cout << "Hello linked list" << endl;
@@ -69,18 +125,28 @@ int main() {
 	Node *head = NULL;
 
 	printList(head);
+	cout << "mean: " << meanNodes(head,0) << endl;
 
 	push(&head,3);
 	push(&head,1);
 	printList(head);
+	cout << "mean: " << meanNodes(head,0) << endl;
 
 	append(head,22);
 	push(&head,99);
 	printList(head);
+	cout << "mean: " << meanNodes(head,0) << endl;
 
 	insertAfter(head,(head->next)->next,51);
 	insertAfter(head,head,15);
 	printList(head);
+	cout << "mean: " << meanNodes(head,0) << endl;
+
+	insertBefore(head,head->next,-2);
+	printList(head);
+	//cout << "count: " << countNodes(head,0) << endl;
+	//cout << "sum: " << sumNodes(head,0) << endl;
+	cout << "mean: " << meanNodes(head,0) << endl;
 
 	return 0;
 }
